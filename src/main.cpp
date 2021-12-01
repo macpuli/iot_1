@@ -4,7 +4,7 @@
 //int led_gpio = 15;
 int columnas[] = {13,12,14,27,32,33,25,26,15,0,23,22,5,18,19,21};
 int filas[] = {17,16,2,4};
-int time = 500;
+int tiempo = 500;
 
 const char* ssid = "INFICobaPu2.4";
 const char* password = "P1e2Lu10S2a1";
@@ -35,14 +35,15 @@ void patron1(){
     if(aux == true){
       for(int i = 0; i < 4; i++){
   		  digitalWrite(filas[i],HIGH);
-      	delay(time);
+      	delay(tiempo);
+        
       	digitalWrite(filas[i],LOW);
   	  }
       aux = false;
     }else{
       for(int i = 3; i >= 0; i--){
   		  digitalWrite(filas[i],HIGH);
-      	delay(time);
+      	delay(tiempo);
       	digitalWrite(filas[i],LOW);
   	  }
       aux = true;
@@ -56,7 +57,7 @@ void patron2(){
   for(int i = 0; i < 4; i++){
     digitalWrite(filas[i],HIGH);
   }
-  delay(time);
+  delay(tiempo);
   
   controlColumnas(LOW);
   digitalWrite(filas[0],LOW);
@@ -64,9 +65,9 @@ void patron2(){
   delay(100);
   
   controlColumnas2(HIGH);
-  delay(time);
+  delay(tiempo);
   controlColumnas2(LOW);
-  delay(time);
+  delay(tiempo);
 }
 void patron3(){
   int incremento=3;
@@ -81,7 +82,7 @@ void patron3(){
     
   		digitalWrite(columnas[mitad1],HIGH);
 		digitalWrite(columnas[mitad2],HIGH);
-    	delay(time);
+    	delay(tiempo);
    		digitalWrite(columnas[mitad1],LOW);
 		digitalWrite(columnas[mitad2],LOW);
 		mitad1--;
@@ -100,13 +101,13 @@ void patron4(){
   }
   for(int i = 0; i < 16; i+=2){
   	digitalWrite(columnas[i],HIGH);
-    delay(time);
+    delay(tiempo);
     digitalWrite(columnas[i],LOW);
   }
   
   for(int i = 15; i > 0; i-=2){
   	digitalWrite(columnas[i],HIGH);
-    delay(time);
+    delay(tiempo);
     digitalWrite(columnas[i],LOW);
   }
   for(int f = 0; f < 4; f++){
@@ -149,10 +150,10 @@ void callback(char* topic, byte* payload, unsigned int length){
 
   switch ((char)payload[0])
   {
-    case '0':
+    case '1':
       patron1();
       break;
-    case '1':
+    case '2':
       patron2();
       break;
   }
