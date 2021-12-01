@@ -21,12 +21,12 @@ long lastMsg = 0;
 char msg[50];
 int value = 0;
 
-void recorrido();
-void cubo();
+void Patron1();
+void Patron2();
 void controlColumnas(bool valor);
 void controlColumnas2(bool valor);
 
-void recorrido(){
+void Patron1(){
   bool aux = true;
   for(int j = 0; j < 16; j++){
     digitalWrite(columnas[j],HIGH);
@@ -49,7 +49,7 @@ void recorrido(){
   }
 }
 
-void cubo(){ 
+void Patron2(){ 
   controlColumnas(HIGH);
   for(int i = 0; i < 4; i++){
     digitalWrite(filas[i],HIGH);
@@ -103,10 +103,10 @@ void callback(char* topic, byte* payload, unsigned int length){
   switch ((char)payload[0])
   {
     case '1':
-      recorrido();
+      Patron1();
       break;
     case '2':
-      cubo();
+      Patron2();
       break;
   }
   /*
