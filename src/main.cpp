@@ -1,7 +1,10 @@
 #include <Arduino.h>
 #include <PubSubClient.h>
 #include <WiFi.h>
-int led_gpio = 15;
+//int led_gpio = 15;
+int columnas[] = {13,12,14,27,32,33,25,26,15,0,23,22,5,18,19,21};
+int filas[] = {17,16,2,4};
+int time = 500;
 
 const char* ssid = "INFICobaPu2.4";
 const char* password = "P1e2Lu10S2a1";
@@ -18,6 +21,76 @@ long lastMsg = 0;
 char msg[50];
 int value = 0;
 
+void recorrido();
+void cubo();
+void controlColumnas(bool valor);
+void controlColumnas2(bool valor);
+
+void recorrido(){
+  bool aux = true;
+  for(int j = 0; j < 16; j++){
+    digitalWrite(columnas[j],HIGH);
+    if(aux == true){
+      for(int i = 0; i < 4; i++){
+  		  digitalWrite(filas[i],HIGH);
+      	delay(time);
+      	digitalWrite(filas[i],LOW);
+  	  }
+      aux = false;
+    }else{
+      for(int i = 3; i >= 0; i--){
+  		  digitalWrite(filas[i],HIGH);
+      	delay(time);
+      	digitalWrite(filas[i],LOW);
+  	  }
+      aux = true;
+    }
+    digitalWrite(columnas[j],LOW);
+  }
+}
+
+void cubo(){ 
+  controlColumnas(HIGH);
+  for(int i = 0; i < 4; i++){
+    digitalWrite(filas[i],HIGH);
+  }
+  delay(time);
+  
+  controlColumnas(LOW);
+  digitalWrite(filas[0],LOW);
+  digitalWrite(filas[3],LOW);
+  delay(100);
+  
+  controlColumnas2(HIGH);
+  delay(time);
+  controlColumnas2(LOW);
+  delay(time);
+}
+
+void controlColumnas(bool valor){
+  digitalWrite(columnas[0],valor);
+  digitalWrite(columnas[1],valor);
+  digitalWrite(columnas[2],valor);
+  digitalWrite(columnas[3],valor);
+  
+  digitalWrite(columnas[4],valor);
+  digitalWrite(columnas[7],valor);
+  digitalWrite(columnas[8],valor);
+  digitalWrite(columnas[11],valor);
+  
+  digitalWrite(columnas[12],valor);
+  digitalWrite(columnas[13],valor);
+  digitalWrite(columnas[14],valor);
+  digitalWrite(columnas[15],valor);
+}
+
+void controlColumnas2(bool valor){
+  digitalWrite(columnas[5],valor);
+  digitalWrite(columnas[6],valor);
+  digitalWrite(columnas[9],valor);
+  digitalWrite(columnas[10],valor);
+}
+
 void callback(char* topic, byte* payload, unsigned int length){
   Serial.print("Mensaje recibido bajo el tópico ->");
   Serial.print(topic);
@@ -27,6 +100,16 @@ void callback(char* topic, byte* payload, unsigned int length){
     Serial.print((char)payload[i]);
   }
 
+  switch ((char)payload[0])
+  {
+    case '0':
+      recorrido();
+      break;
+    case '1':
+      cubo();
+      break;
+  }
+  /*
   if((char)payload[0] == '0'){
     digitalWrite(led_gpio, LOW);
     Serial.println("\n LED apagado");
@@ -35,7 +118,7 @@ void callback(char* topic, byte* payload, unsigned int length){
     digitalWrite(led_gpio, HIGH);
     Serial.println("\n LED encendido");
   }
-
+  */
   Serial.println();
 }
 
@@ -79,8 +162,17 @@ void setup_wifi(){
 
 void setup() {
   // put your setup code here, to run once:
-  pinMode(led_gpio, OUTPUT);
+  //pinMode(led_gpio, OUTPUT);
   Serial.begin(115200);
+
+  for(int i = 0; i < 16; i++){
+    pinMode(columnas[i],OUTPUT);
+  }
+  
+  for(int i = 0; i < 4; i++){
+    pinMode(filas[i],OUTPUT);
+  }
+
   setup_wifi();
   client.setServer(mqtt_server, mqtt_port);
   client.setCallback(callback);
