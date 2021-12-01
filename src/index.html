@@ -60,7 +60,7 @@
             function command(value){
                 console.log("Patrón " + value);
                 message = new Paho.MQTT.Message(value + "");
-                message.destinationName = 'entradaEquipo10';
+                message.destinationName = 'patronEquipo10';
                 client.send(message);
             }
         </script>
