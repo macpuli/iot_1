@@ -26,6 +26,7 @@ void patron1();
 void patron2();
 void patron3();
 void patron4();
+void patron5();
 void controlColumnas(bool);
 void controlColumnas2(bool);
 void despliegaPatron(char);
@@ -117,6 +118,86 @@ void patron4(){
   }
   
 }
+
+void patron5(){
+
+    int in1 = 0;
+    int in2= 1;
+    int in3= 2;
+    int in4= 3;
+    int fin1=3;
+    int fin2=4;
+    int fin3=11;
+    int fin4=12;
+    int cost1=12;
+    int cost2=13;
+    int cost3=14;
+    int cost4=15;
+    digitalWrite(filas[0],HIGH);
+    digitalWrite(filas[1],HIGH);
+    digitalWrite(filas[2],HIGH);
+    digitalWrite(filas[3],HIGH);
+      for(int i=0; i<4; i++){
+        digitalWrite(columnas[in1],HIGH);
+        digitalWrite(columnas[in2],HIGH);
+        digitalWrite(columnas[in3],HIGH);
+        digitalWrite(columnas[in4],HIGH);
+        delay(90);
+        digitalWrite(columnas[in1],LOW);
+        digitalWrite(columnas[in2],LOW);
+        digitalWrite(columnas[in3],LOW);
+        digitalWrite(columnas[in4],LOW);
+        in1+=4;
+        in2+=4;
+        in3+=4;
+        in4+=4;
+      }
+      for(int i=0; i<4; i++){
+        digitalWrite(columnas[fin1],HIGH);
+        digitalWrite(columnas[fin2],HIGH);
+        digitalWrite(columnas[fin3],HIGH);
+        digitalWrite(columnas[fin4],HIGH);
+        delay(90);
+        digitalWrite(columnas[fin1],LOW);
+        digitalWrite(columnas[fin2],LOW);
+        digitalWrite(columnas[fin3],LOW);
+        digitalWrite(columnas[fin4],LOW);
+        fin1-=1;
+        fin2+=1;
+        fin3-=1;
+        fin4+=1;
+      }
+      for(int i=0; i<4; i++){
+        digitalWrite(columnas[cost1],HIGH);
+        digitalWrite(columnas[cost2],HIGH);
+        digitalWrite(columnas[cost3],HIGH);
+        digitalWrite(columnas[cost4],HIGH);
+        delay(90);
+        digitalWrite(columnas[cost1],LOW);
+        digitalWrite(columnas[cost2],LOW);
+        digitalWrite(columnas[cost3],LOW);
+        digitalWrite(columnas[cost4],LOW);
+        cost1-=4;
+        cost2-=4;
+        cost3-=4;
+        cost4-=4;
+      }
+      for(int t=0; t<4; t++){
+        digitalWrite(filas[0],LOW);
+        digitalWrite(filas[1],LOW);
+        digitalWrite(filas[2],LOW);
+        digitalWrite(filas[3],LOW);
+        controlColumnas(HIGH);
+        controlColumnas2(HIGH);
+        digitalWrite(filas[t],HIGH);
+        delay(90);
+        digitalWrite(filas[t],LOW);
+      }
+      controlColumnas(LOW);
+      controlColumnas2(LOW);
+      delay(90);
+}
+
 void controlColumnas(bool valor){
   digitalWrite(columnas[0],valor);
   digitalWrite(columnas[1],valor);
@@ -155,7 +236,10 @@ void despliegaPatron(char patron){
       break;
     case '4':
       patron4();
-      break;  
+      break;
+    case '5':
+      patron5();
+      break;    
   }
 }
 
@@ -246,7 +330,7 @@ void loop() {
 
   client.loop();
 
-  if(millis() - lastMsg > 2000){
+  if(millis() - lastMsg > 10){
     lastMsg = millis();
     despliegaPatron(auxPatron);
   }
