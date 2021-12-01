@@ -102,10 +102,10 @@ void callback(char* topic, byte* payload, unsigned int length){
 
   switch ((char)payload[0])
   {
-    case '0':
+    case '1':
       recorrido();
       break;
-    case '1':
+    case '2':
       cubo();
       break;
   }
