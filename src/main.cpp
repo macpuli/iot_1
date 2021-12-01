@@ -5,6 +5,7 @@
 int columnas[] = {13,12,14,27,32,33,25,26,15,0,23,22,5,18,19,21};
 int filas[] = {17,16,2,4};
 int tiempo = 500;
+char auxPatron = '0';
 
 const char* ssid = "INFICobaPu2.4";
 const char* password = "P1e2Lu10S2a1";
@@ -25,8 +26,9 @@ void patron1();
 void patron2();
 void patron3();
 void patron4();
-void controlColumnas(bool valor);
-void controlColumnas2(bool valor);
+void controlColumnas(bool);
+void controlColumnas2(bool);
+void despliegaPatron(char);
 
 void patron1(){
   bool aux = true;
@@ -62,7 +64,7 @@ void patron2(){
   controlColumnas(LOW);
   digitalWrite(filas[0],LOW);
   digitalWrite(filas[3],LOW);
-  delay(100);
+  delay(tiempo);
   
   controlColumnas2(HIGH);
   delay(tiempo);
@@ -139,16 +141,8 @@ void controlColumnas2(bool valor){
   digitalWrite(columnas[10],valor);
 }
 
-void callback(char* topic, byte* payload, unsigned int length){
-  Serial.print("Mensaje recibido bajo el tópico ->");
-  Serial.print(topic);
-  Serial.print("\n");
-
-  for (int i=0; i<length; i++){
-    Serial.print((char)payload[i]);
-  }
-
-  switch ((char)payload[0])
+void despliegaPatron(char patron){
+  switch (patron)
   {
     case '1':
       patron1();
@@ -163,6 +157,18 @@ void callback(char* topic, byte* payload, unsigned int length){
       patron4();
       break;  
   }
+}
+
+void callback(char* topic, byte* payload, unsigned int length){
+  Serial.print("Mensaje recibido bajo el tópico ->");
+  Serial.print(topic);
+  Serial.print("\n");
+
+  for (int i=0; i<length; i++){
+    Serial.print((char)payload[i]);
+  }
+
+  auxPatron = payload[0];
   /*
   if((char)payload[0] == '0'){
     digitalWrite(led_gpio, LOW);
@@ -239,4 +245,9 @@ void loop() {
   }
 
   client.loop();
+
+  if(millis() - lastMsg > 2000){
+    lastMsg = millis();
+    despliegaPatron(auxPatron);
+  }
 }
