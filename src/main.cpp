@@ -21,12 +21,14 @@ long lastMsg = 0;
 char msg[50];
 int value = 0;
 
-void recorrido();
-void cubo();
+void patron1();
+void patron2();
+void patron3();
+void patron4();
 void controlColumnas(bool valor);
 void controlColumnas2(bool valor);
 
-void recorrido(){
+void patron1(){
   bool aux = true;
   for(int j = 0; j < 16; j++){
     digitalWrite(columnas[j],HIGH);
@@ -49,7 +51,7 @@ void recorrido(){
   }
 }
 
-void cubo(){ 
+void patron2(){ 
   controlColumnas(HIGH);
   for(int i = 0; i < 4; i++){
     digitalWrite(filas[i],HIGH);
@@ -66,7 +68,52 @@ void cubo(){
   controlColumnas2(LOW);
   delay(time);
 }
-
+void patron3(){
+  int incremento=3;
+  for(int f = 0; f < 2; f++){
+   	
+  	int mitad1= 7;
+  	int mitad2= 8;  
+  	digitalWrite(filas[f],HIGH);
+    digitalWrite(filas[f+incremento], HIGH);
+    
+  	for(int i = 0; i < 8; i++){
+    
+  		digitalWrite(columnas[mitad1],HIGH);
+		digitalWrite(columnas[mitad2],HIGH);
+    	delay(time);
+   		digitalWrite(columnas[mitad1],LOW);
+		digitalWrite(columnas[mitad2],LOW);
+		mitad1--;
+    	mitad2++;
+    
+  	}
+  	digitalWrite(filas[f],LOW); 
+    digitalWrite(filas[f+incremento],LOW);
+    incremento-=2;
+  }
+  
+}
+void patron4(){
+  for(int f = 0; f < 4; f++){
+  	digitalWrite(filas[f],HIGH);
+  }
+  for(int i = 0; i < 16; i+=2){
+  	digitalWrite(columnas[i],HIGH);
+    delay(time);
+    digitalWrite(columnas[i],LOW);
+  }
+  
+  for(int i = 15; i > 0; i-=2){
+  	digitalWrite(columnas[i],HIGH);
+    delay(time);
+    digitalWrite(columnas[i],LOW);
+  }
+  for(int f = 0; f < 4; f++){
+  	digitalWrite(filas[f],LOW);
+  }
+  
+}
 void controlColumnas(bool valor){
   digitalWrite(columnas[0],valor);
   digitalWrite(columnas[1],valor);
@@ -103,10 +150,10 @@ void callback(char* topic, byte* payload, unsigned int length){
   switch ((char)payload[0])
   {
     case '0':
-      recorrido();
+      patron1();
       break;
     case '1':
-      cubo();
+      patron2();
       break;
   }
   /*
