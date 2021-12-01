@@ -2,15 +2,22 @@
 <html lang="es" dir="ltr">
     <head>
         <meta charset="utf-8">
-        <title>IOT 1</title>
+        <title>Cubo de leds 4x4x4</title>
     </head>
 
     <body>
-        <h1>IOT 1</h1>
+        <h1>Cubo de leds 4x4x4</h1>
         <div id="display"> </div>
-        <p>Seleccione un patron</p>
-        <button onclick="command(1)" type="button">Patron 1</button><br><br>
-        <button onclick="command(2)" type="button">Patron 2</button><br>
+        <label for="patron-select">Selecciona un patrón:</label>
+        
+        <select id="patron-select" onChange="command(this.value)">
+            <option value="">--Elige un patrón--</option>
+            <option value="1">Patrón 1</option>
+            <option value="2">Patrón 2</option>
+            <option value="3">Patrón 3</option>
+            <option value="4">Patrón 4</option>
+            <option value="5">Patrón 5</option>
+        </select>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
         <script type="text/javascript">
@@ -32,8 +39,9 @@
 
             function onConnect(){
                 console.log("Conexión exitosa");
-                client.subscribe("MCP");
+                client.subscribe("Equipo10");
             }
+            
 
             function onMessageArrived(message){
                 console.log("Un mensaje ha llegado:"+ message.payloadString);
@@ -50,9 +58,9 @@
             }
 
             function command(value){
-                console.log("Patron " + value);
+                console.log("Patrón " + value);
                 message = new Paho.MQTT.Message(value + "");
-                message.destinationName = 'entradaMCP';
+                message.destinationName = 'entradaEquipo10';
                 client.send(message);
             }
         </script>

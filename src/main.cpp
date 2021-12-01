@@ -156,6 +156,12 @@ void callback(char* topic, byte* payload, unsigned int length){
     case '2':
       patron2();
       break;
+    case '3':
+      patron3();
+      break;
+    case '4':
+      patron4();
+      break;  
   }
   /*
   if((char)payload[0] == '0'){
@@ -174,13 +180,13 @@ void reconnect(){
   while(!client.connected()){
     Serial.println("Intentando Conexión MQTT");
 
-    String clientId = "iot_1_";
+    String clientId = "equipo10_";
     clientId = clientId + String(random(0xffff),HEX);
 
     if (client.connect(clientId.c_str(), mqtt_user, mqtt_pass)) {
       Serial.println("Conexión a MQTT exitosa");
-      client.publish("salidaMCP", "Primer mensaje");
-      client.subscribe("entradaMCP");
+      client.publish("salidaEquipo10", "Primer mensaje");
+      client.subscribe("patronEquipo10");
     } else {
       Serial.print("Falló la conexión");
       Serial.print(client.state());
@@ -233,12 +239,4 @@ void loop() {
   }
 
   client.loop();
-  if(millis()-lastMsg > 2000){
-    lastMsg = millis();
-    value++;
-    String mes = "Valor ->" + String(value);
-    mes.toCharArray(msg, 50);
-    client.publish("MCP", msg);
-    Serial.println("Mensaje enviado ->" + String(value));
-  }
 }
