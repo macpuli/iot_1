@@ -415,6 +415,7 @@ void patron7(){
 
 
 void despliegaPatron(char patron){
+  estadoCubo(LOW);
   switch (patron)
   {
     case '1':
