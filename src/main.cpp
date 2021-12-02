@@ -462,6 +462,7 @@ void setup() {
   setup_wifi();
   client.setServer(mqtt_server, mqtt_port);
   client.setCallback(callback);
+  estadoCubo(LOW);
 }
 
 void loop() {
