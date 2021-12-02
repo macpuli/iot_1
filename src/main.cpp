@@ -4,7 +4,7 @@
 //int led_gpio = 15;
 int columnas[] = {13,12,14,27,32,33,25,26,15,0,23,22,5,18,19,21};
 int filas[] = {17,16,2,4};
-int tiempo = 90;
+int tiempo = 150;
 char auxPatron = '0';
 
 const char* ssid = "INFICobaPu2.4";
