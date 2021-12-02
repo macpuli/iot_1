@@ -18,11 +18,10 @@ const char *mqtt_pass = "PtsiiKX9xhVm";
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-//void patron1();
-//void patron2();
-//void patron3();
-//void patron4();
-/*
+void patron1();
+void patron2();
+void patron3();
+void patron4();
 void patron5();
 void patron6();
 void patron7();
@@ -39,7 +38,7 @@ void triangulos1();
 void triangulos2();
 void cruz();
 void letrax();
-void letraz();*/
+void letraz();
 
 void callback(char *topic, byte *payload, unsigned int length)
 {
