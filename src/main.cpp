@@ -4,7 +4,7 @@
 //int led_gpio = 15;
 int columnas[] = {13,12,14,27,32,33,25,26,15,0,23,22,5,18,19,21};
 int filas[] = {17,16,2,4};
-int tiempo = 500;
+int tiempo = 90;
 char auxPatron = '0';
 
 const char* ssid = "INFICobaPu2.4";
@@ -20,16 +20,209 @@ PubSubClient client(espClient);
 
 long lastMsg = 0;
 char msg[50];
-int value = 0;
+//int value = 0;
 
 void patron1();
 void patron2();
 void patron3();
 void patron4();
 void patron5();
+void patron6();
+void patron7();
 void controlColumnas(bool);
 void controlColumnas2(bool);
+void controlfilas();
+void estadoCubo(bool); 
 void despliegaPatron(char);
+void cuadrado();
+void cuadradoChico();
+void circulo();
+void trianguloRect();
+void triangulos1();
+void triangulos2();
+void cruz();
+void letrax();
+void letraz();
+
+void callback(char* topic, byte* payload, unsigned int length){
+  Serial.print("Mensaje recibido bajo el tópico ->");
+  Serial.print(topic);
+  Serial.print("\n");
+
+  for (int i=0; i<length; i++){
+    Serial.print((char)payload[i]);
+  }
+
+  auxPatron = payload[0];
+  Serial.println();
+}
+
+void reconnect(){
+  while(!client.connected()){
+    Serial.println("Intentando Conexión MQTT");
+
+    String clientId = "equipo10_";
+    clientId = clientId + String(random(0xffff),HEX);
+
+    if (client.connect(clientId.c_str(), mqtt_user, mqtt_pass)) {
+      Serial.println("Conexión a MQTT exitosa");
+      client.publish("salidaEquipo10", "Primer mensaje");
+      client.subscribe("patronEquipo10");
+    } else {
+      Serial.print("Falló la conexión");
+      Serial.print(client.state());
+      Serial.println("Se intentará de nuevo en 5 segundos");
+      delay(5000);
+    }
+  }
+}
+
+void setup_wifi(){
+  Serial.println();
+  Serial.println("Conectando a...");
+  Serial.println(ssid);
+
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED){
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("");
+  Serial.println("Conectando a red ->");
+  Serial.println("Dirección IP: ");
+  Serial.println(WiFi.localIP());
+}
+
+void estadoCubo(bool valor){
+  for(int i = 0; i < 16; i++){
+    digitalWrite(columnas[i],valor);
+  }
+  
+  for(int j = 0; j < 4; j++){
+    digitalWrite(filas[j],valor);
+  }
+}
+
+void controlColumnas(bool valor){
+  digitalWrite(columnas[0],valor);
+  digitalWrite(columnas[1],valor);
+  digitalWrite(columnas[2],valor);
+  digitalWrite(columnas[3],valor);
+  
+  digitalWrite(columnas[4],valor);
+  digitalWrite(columnas[7],valor);
+  digitalWrite(columnas[8],valor);
+  digitalWrite(columnas[11],valor);
+  
+  digitalWrite(columnas[12],valor);
+  digitalWrite(columnas[13],valor);
+  digitalWrite(columnas[14],valor);
+  digitalWrite(columnas[15],valor);
+}
+
+void controlColumnas2(bool valor){
+  digitalWrite(columnas[5],valor);
+  digitalWrite(columnas[6],valor);
+  digitalWrite(columnas[9],valor);
+  digitalWrite(columnas[10],valor);
+}
+
+void controlfilas(){
+  for(int i = 0; i < 4; i++){
+    digitalWrite(filas[i],HIGH);
+    delay(tiempo);
+    digitalWrite(filas[i],LOW);
+  } 
+}
+
+void cuadrado(){
+  controlColumnas(HIGH);
+  controlfilas();
+}
+
+void cuadradoChico(){
+  controlColumnas2(HIGH);
+  controlfilas();
+}
+
+void circulo(){
+  for(int i = 0; i < 16; i++){
+    if( i == 0 || i == 3 || i == 5 || i == 6 || i == 9 || i == 10 || i == 12 || i == 15 ){
+      digitalWrite(columnas[i],LOW);
+    }else{
+      digitalWrite(columnas[i],HIGH);
+    }
+  }
+  controlfilas();
+}
+
+void trianguloRect(){
+  for(int i = 0; i < 16; i++){
+    if( i == 0 || i == 1 || i == 2 || i == 3 || i == 5 || i == 7 || i == 8 || i == 9 || i == 15){
+      digitalWrite(columnas[i],HIGH);
+    }else{
+      digitalWrite(columnas[i],LOW);
+    }
+  }
+  controlfilas();
+}
+
+void triangulos1(){
+  for(int i = 0; i < 16; i++){
+    if( i == 0 || i == 1 || i == 7 || i == 11 || i == 12 || i == 13){
+      digitalWrite(columnas[i],HIGH);
+    }else{
+      digitalWrite(columnas[i],LOW);
+    }
+  }
+  controlfilas();
+}
+
+void triangulos2(){
+  for(int i = 0; i < 16; i++){
+    if( i == 2 || i == 3 || i == 4 || i == 8 || i == 14 || i == 15){
+      digitalWrite(columnas[i],HIGH);
+    }else{
+      digitalWrite(columnas[i],LOW);
+    }
+  }
+  controlfilas();
+}
+
+void cruz(){
+  for(int i = 0; i < 16; i++){
+    if( i == 0 || i == 3 || i == 12 || i == 15 ){
+      digitalWrite(columnas[i],LOW);
+    }else{
+      digitalWrite(columnas[i],HIGH);
+    }
+  }
+  controlfilas();
+}
+
+void letrax(){
+  for(int i = 0; i < 16; i++){
+    if( i == 0 || i == 3 || i == 5 || i == 6 || i == 9 || i == 10 || i == 12 || i == 15 ){
+      digitalWrite(columnas[i],HIGH);
+    }else{
+      digitalWrite(columnas[i],LOW);
+    }
+  }
+  controlfilas();
+}
+
+void letraz(){
+  for(int i = 0; i < 16; i++){
+    if( i == 4 || i == 6 || i == 7 || i == 8 || i == 10 || i == 11 ){
+      digitalWrite(columnas[i],LOW);
+    }else{
+      digitalWrite(columnas[i],HIGH);
+    }
+  }
+  controlfilas();
+}
 
 void patron1(){
   bool aux = true;
@@ -120,7 +313,6 @@ void patron4(){
 }
 
 void patron5(){
-
     int in1 = 0;
     int in2= 1;
     int in3= 2;
@@ -198,29 +390,29 @@ void patron5(){
       delay(90);
 }
 
-void controlColumnas(bool valor){
-  digitalWrite(columnas[0],valor);
-  digitalWrite(columnas[1],valor);
-  digitalWrite(columnas[2],valor);
-  digitalWrite(columnas[3],valor);
-  
-  digitalWrite(columnas[4],valor);
-  digitalWrite(columnas[7],valor);
-  digitalWrite(columnas[8],valor);
-  digitalWrite(columnas[11],valor);
-  
-  digitalWrite(columnas[12],valor);
-  digitalWrite(columnas[13],valor);
-  digitalWrite(columnas[14],valor);
-  digitalWrite(columnas[15],valor);
+void patron6(){
+  cuadrado();
+  delay(tiempo);
+  cuadradoChico();
+  delay(tiempo);
+  trianguloRect();
+  delay(tiempo);
+  circulo();
+  delay(tiempo);
+  triangulos1();
+  delay(tiempo);
+  triangulos2();
+  delay(tiempo);
+}
+void patron7(){
+  cruz();
+  delay(tiempo);
+  letrax();
+  delay(tiempo);
+  letraz();
+  delay(tiempo);
 }
 
-void controlColumnas2(bool valor){
-  digitalWrite(columnas[5],valor);
-  digitalWrite(columnas[6],valor);
-  digitalWrite(columnas[9],valor);
-  digitalWrite(columnas[10],valor);
-}
 
 void despliegaPatron(char patron){
   switch (patron)
@@ -239,71 +431,21 @@ void despliegaPatron(char patron){
       break;
     case '5':
       patron5();
-      break;    
+      break;
+    case '6':
+      patron6();
+      break;
+    case '7':
+      patron7();
+      break;
+    case '8':
+      estadoCubo(HIGH);
+      break;
+    default:
+      estadoCubo(LOW);
+      break;
   }
 }
-
-void callback(char* topic, byte* payload, unsigned int length){
-  Serial.print("Mensaje recibido bajo el tópico ->");
-  Serial.print(topic);
-  Serial.print("\n");
-
-  for (int i=0; i<length; i++){
-    Serial.print((char)payload[i]);
-  }
-
-  auxPatron = payload[0];
-  /*
-  if((char)payload[0] == '0'){
-    digitalWrite(led_gpio, LOW);
-    Serial.println("\n LED apagado");
-  }
-  else{
-    digitalWrite(led_gpio, HIGH);
-    Serial.println("\n LED encendido");
-  }
-  */
-  Serial.println();
-}
-
-void reconnect(){
-  while(!client.connected()){
-    Serial.println("Intentando Conexión MQTT");
-
-    String clientId = "equipo10_";
-    clientId = clientId + String(random(0xffff),HEX);
-
-    if (client.connect(clientId.c_str(), mqtt_user, mqtt_pass)) {
-      Serial.println("Conexión a MQTT exitosa");
-      client.publish("salidaEquipo10", "Primer mensaje");
-      client.subscribe("patronEquipo10");
-    } else {
-      Serial.print("Falló la conexión");
-      Serial.print(client.state());
-      Serial.println("Se intentará de nuevo en 5 segundos");
-      delay(5000);
-    }
-  }
-}
-
-void setup_wifi(){
-  Serial.println();
-  Serial.println("Conectando a...");
-  Serial.println(ssid);
-
-  WiFi.begin(ssid, password);
-
-  while (WiFi.status() != WL_CONNECTED){
-    delay(500);
-    Serial.print(".");
-  }
-
-  Serial.println("");
-  Serial.println("Conectando a red ->");
-  Serial.println("Dirección IP: ");
-  Serial.println(WiFi.localIP());
-}
-
 void setup() {
   // put your setup code here, to run once:
   //pinMode(led_gpio, OUTPUT);
@@ -330,7 +472,7 @@ void loop() {
 
   client.loop();
 
-  if(millis() - lastMsg > 10){
+  if(millis() - lastMsg > 100){
     lastMsg = millis();
     despliegaPatron(auxPatron);
   }
