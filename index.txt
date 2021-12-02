@@ -1,0 +1,145 @@
+---
+layout: default
+---
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <title>Cubo de leds 4x4x4</title>
+</head>
+
+<body>
+    <h1>Objetivo</h1>
+    <p align="justify">
+        Este proyecto busca aplicar el concepto de IoT (Internet de las cosas), que tiene relación con que ciertos dispositivos puedan enviar y recibir datos a través de WiFi. En este caso, se realiza un cubo de leds de 4x4x4 leds conectado a la placa ESP32 (que es el dispositivo que se conecta a WiFi, a través de un bróker alojado en CloudMQTT), la cual recibirá mensajes desde esta página web para desplegar diferentes secuencias de patrones con los 64 leds.
+    </p>
+
+    <h1>Controlando el cubo</h1>
+    <center>
+        <div id="display"> </div>
+        <label for="patron-select">Selecciona un patrón:</label>
+    
+        <select id="patron-select" onChange="command(this.value)">
+            <option value="0">--Elige un patrón--</option>
+            <option value="1">Patrón 1</option>
+            <option value="2">Patrón 2</option>
+            <option value="3">Patrón 3</option>
+            <option value="4">Patrón 4</option>
+            <option value="5">Patrón 5</option>
+            <option value="6">Patrón 6</option>
+            <option value="7">Patrón 7</option>
+            <option value="8">Encender</option>
+        </select>
+    </center>
+
+    <h1>Descripción de patrones</h1>
+    <h2>Patrón 1</h2>
+    <center>
+        <iframe width="640" height="368" src="https://www.youtube.com/embed/wL1Py7CRMo0">
+        </iframe>
+    </center>
+    <p align="justify">
+        Consiste en un movimiento que simula a una serpiente, encendiendo led por led.
+    </p>
+    <h2>Patrón 2</h2>
+    <center>
+        <iframe width="640" height="368" src="https://www.youtube.com/embed/hcQBb4hjnv0">
+        </iframe>
+    </center>
+    <p align="justify">
+        Este patrón comienza por encender sólo las 4 caras laterales del cubo, posteriormente las apaga y enciende los leds necesarios para visualizar un cubo de 2x2x2.
+    </p>
+    <h2>Patrón 3</h2>
+    <center>
+        <iframe width="640" height="368" src="https://www.youtube.com/embed/3jPmWcs7KCY">
+        </iframe>
+    </center>
+    <p align="justify">
+        En este patrón se van encendiendo dos leds simultanéamente en cada fila (dos filas al mismo tiempo). Inicia 
+        en las filas superior e inferior (avanzando hacia las del centro), en las columnas inician en el centro de 
+        un lado (dependiendo la perspectiva) y avanzan hasta terminar en la misma columna que se inició.
+    </p>
+    <h2>Patrón 4</h2>
+    <center>
+        <iframe width="640" height="368" src="https://www.youtube.com/embed/-_3k4wJO8FY">
+        </iframe>
+    </center>
+    <p align="justify">
+        Recorre todas las filas con una columna sí y otra no, regresando por las que no recorrió.
+    </p>
+    <h2>Patrón 5</h2>
+    <center>
+        <iframe width="640" height="368" src="https://www.youtube.com/embed/5uZJv8RdaIY">
+        </iframe>
+    </center>
+    <p align="justify">
+        Este patrón tiene la función de prender toda una cara del cubo y recorrer hacia el sentido contrario, al terminar este paso realizará dos veces el mismo funcionamiento de dos distintos lados de cara. Para finalizar, este patron comenzará del nivel 0 hasta terminar en el nivel 3.
+    </p>
+    <h2>Patrón 6</h2>
+    <center>
+        <iframe width="640" height="368" src="https://www.youtube.com/embed/5b2EKCYacGw">
+        </iframe>
+    </center>
+    <p align="justify">
+        En este patrón se muestran diferentes figuras geométricas, como cuadrados, triángulos y un círculo.
+    </p>
+    <h2>Patrón 7</h2>
+    <center>
+        <iframe width="640" height="368" src="https://www.youtube.com/embed/XRjz7ka-tn4">
+        </iframe>
+    </center>
+    <p align="justify">
+        En este patrón se muestran las letras X, Z y el signo positivo.
+    </p>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var clientId = 'client_id_' + Math.floor((Math.random() * 1000000) + 1);
+        client = new Paho.MQTT.Client("driver.cloudmqtt.com", 38651, clientId);
+
+        client.onConnectionLost = onConnectionLost;
+        client.onMessageArrived = onMessageArrived;
+
+        var options = {
+            useSSL: true,
+            userName: "clxxwiek",
+            password: "PtsiiKX9xhVm",
+            onSuccess: onConnect,
+            onFailure: doFail
+        }
+
+        client.connect(options);
+
+        function onConnect() {
+            console.log("Conexión exitosa");
+            //client.subscribe("Equipo10");
+        }
+
+        /*
+        function onMessageArrived(message) {
+            console.log("Un mensaje ha llegado:" + message.payloadString);
+        }
+        */
+
+        function doFail(e) {
+            console.log(e);
+        }
+
+        function onConnectionLost(responseObject) {
+            if (responseObject.errorCode !== 0) {
+                console.log("onConnectionLost: " + responseObject.errorMessage);
+            }
+        }
+
+        function command(value) {
+            console.log("Patrón " + value);
+            message = new Paho.MQTT.Message(value + "");
+            message.destinationName = 'patronEquipo10';
+            client.send(message);
+        }
+    </script>
+</body>
+
+</html>
