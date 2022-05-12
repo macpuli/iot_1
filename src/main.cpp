@@ -7,13 +7,13 @@ int filas[] = {17,16,2,4};
 int tiempo = 150;
 char auxPatron = '0';
 
-const char* ssid = "Totalplay650184_2.4Gnormal";
-const char* password = "FAMosorno2122";
+const char* ssid = "LaPurificadora";
+const char* password = "hpurificadora";
 
 const char *mqtt_server = "driver.cloudmqtt.com";
-const int mqtt_port = 18651;
-const char *mqtt_user = "clxxwiek";
-const char *mqtt_pass = "PtsiiKX9xhVm";
+const int mqtt_port = 18570;
+const char *mqtt_user = "wykfnamf";
+const char *mqtt_pass = "08Yld_XAiJxb";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
