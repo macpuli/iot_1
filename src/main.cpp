@@ -7,8 +7,8 @@ int filas[] = {17,16,2,4};
 int tiempo = 150;
 char auxPatron = '0';
 
-const char* ssid = "LaPurificadora";
-const char* password = "hpurificadora";
+const char* ssid = "Total4g_tplink";
+const char* password = "osorno6716";
 
 const char *mqtt_server = "driver.cloudmqtt.com";
 const int mqtt_port = 18570;
